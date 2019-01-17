@@ -18,17 +18,20 @@ using namespace std;
 using namespace sf;
 using namespace std::this_thread;
 
-
-// Global variables
-RenderWindow app(VideoMode(400, 533), "Doodle Jump!");
-int score = 0;
-char levels[5][15] = {"Beginner", "Amateur", "Professional", "Expert", "Legend"};
-
 // Creating a point object to define location
 struct point
 {
     int x,y;
 };
+
+// Global variables
+RenderWindow app(VideoMode(400, 533), "Doodle Jump!"); // Create App
+Texture * t = new Texture[3]; // Textures of sprites
+Sprite sBackground, sPlat, sPers;
+point plat[10]; // Create platforms
+int score = 0;
+char levels[5][15] = {"Beginner", "Amateur", "Professional", "Expert", "Legend"};
+
 
 //Using time value as seed
 void setSeed() {
@@ -53,14 +56,12 @@ void introduction()
 }
 
 // Import Images as textures
-Texture * imports() {
+void imports() {
 
-    Texture * t = new Texture[3];
     t[0].loadFromFile("images/background.png");
     t[1].loadFromFile("images/platform.png");
     t[2].loadFromFile("images/doodle.png");
 
-    return t;
 }
 
 // Clear Screen
@@ -71,7 +72,23 @@ void clearScreen() {
 
 // Create app instance
 void setUpApp() {
+    
     app.setFramerateLimit(60);
+
+    imports();
+
+    // Localize all platforms
+    for (int i=0; i<10; i++)
+    {
+        plat[i].x=rand()%400;
+        plat[i].y=rand()%533;
+    }
+
+    // Set up Sprites
+    sBackground = Sprite(*t);
+    sPlat =  Sprite(*(t+1));
+    sPers = Sprite(*(t+2));
+
 }
 
 // Initialisation
@@ -87,6 +104,7 @@ void init() {
     clearScreen();
 
     setUpApp();
+
 }
 
 int level() {
@@ -97,7 +115,7 @@ int level() {
     else return 1;
 }
 
-void ending() {
+void conclusion() {
     cout<<"Your Score is "<<score<<endl;
     cout<<"You are a "<< levels[level() - 1]<<endl;
 }
@@ -105,22 +123,7 @@ void ending() {
 int main()
 {
 
-    init();
-
-    Texture * t = imports();
-
-    // Create Sprites
-    Sprite sBackground(*t), sPlat(*(t+1)), sPers(*(t+2));
-
-    // Create 10 platforms
-    point plat[10];
-
-    // Localize all platforms
-    for (int i=0; i<10; i++)
-    {
-        plat[i].x=rand()%400;
-        plat[i].y=rand()%533;
-    }
+    init();    
 
     int x=100,y=100,h=200;
     float dx=0,dy=0;
@@ -174,7 +177,7 @@ int main()
         app.display();
     }
 
-    ending();
+    conclusion();
 
     return 0;
 }
