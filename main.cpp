@@ -20,6 +20,7 @@ using namespace std::this_thread;
 
 
 // Global variables
+RenderWindow app(VideoMode(400, 533), "Doodle Jump!");
 int score = 0;
 char levels[5][15] = {"Beginner", "Amateur", "Professional", "Expert", "Legend"};
 
@@ -68,6 +69,11 @@ void clearScreen() {
     flush(cout);
 }
 
+// Create app instance
+void setUpApp() {
+    app.setFramerateLimit(60);
+}
+
 // Initialisation
 void init() {
 
@@ -79,13 +85,15 @@ void init() {
     sleep_until(std::chrono::system_clock::now() + chrono::seconds(3));
 
     clearScreen();
+
+    setUpApp();
 }
 
 int level() {
     if (score>1000) return 5;
     else if (score>500) return 4;
     else if (score>250) return 3;
-    else if (score>50) return 2;
+    else if (score>30) return 2;
     else return 1;
 }
 
@@ -99,10 +107,6 @@ int main()
 
     init();
 
-    // Create app instance
-    RenderWindow app(VideoMode(400, 533), "Doodle Jump!");
-    app.setFramerateLimit(60);
-
     Texture * t = imports();
 
     // Create Sprites
@@ -111,6 +115,7 @@ int main()
     // Create 10 platforms
     point plat[10];
 
+    // Localize all platforms
     for (int i=0; i<10; i++)
     {
         plat[i].x=rand()%400;
