@@ -110,6 +110,11 @@ void init() {
 
 }
 
+void move() {
+    if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
+    if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
+}
+
 void run() {
     while (app.isOpen()) {
         Event e;
@@ -118,8 +123,8 @@ void run() {
             if (e.type == Event::Closed)
                 app.close();
         }
-        if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
-        if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
+        
+        move();
 
         dy+=0.2;
         y+=dy;
