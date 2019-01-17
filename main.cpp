@@ -1,24 +1,51 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include <iostream>
+
+using namespace std;
 using namespace sf;
 
 struct point
 { int x,y;};
 
+void setSeed(){
+    //Using time value as seed
+    srand(time(0));
+}
+
+void init(){
+
+    setSeed();
+
+}
+
+void introduction()
+{
+    cout<<"Welcome to Doodle Jump!\n";
+}
+
+Texture * imports(){
+    
+    Texture * t = new Texture[3];
+    t[0].loadFromFile("images/background.png");
+    t[1].loadFromFile("images/platform.png");
+    t[2].loadFromFile("images/doodle.png");
+
+    return t;
+}
+
+
 int main()
 {
-    srand(time(0));
+    init();
 
+    // Create app instance
     RenderWindow app(VideoMode(400, 533), "Doodle Jump!");
     app.setFramerateLimit(60);
 
-    Texture t1,t2,t3;
-    t1.loadFromFile("images/background.png");
-    t2.loadFromFile("images/platform.png");
-    t3.loadFromFile("images/doodle.png");
+    Texture * t = imports();
 
-    Sprite sBackground(t1), sPlat(t2), sPers(t3);
+    Sprite sBackground(*t), sPlat(*(t+1)), sPers(*(t+2));
 
     point plat[20];
 
@@ -43,13 +70,13 @@ int main()
     if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
     if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
     // Testing
-    if (Keyboard::isKeyPressed(Keyboard::Down)) std::cout<<y<<std::endl;
+    if (Keyboard::isKeyPressed(Keyboard::Down)) cout<<y<<endl;
 
     dy+=0.2;
     y+=dy;
     if (y>500)  {
         dy=-10;
-        std::cout<<"Game Over"<<std::endl;
+        cout<<"Game Over"<<endl;
     }
 
 	if (y<h)
