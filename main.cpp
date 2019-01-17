@@ -25,15 +25,19 @@ void setSeed(){
     srand(time(0));
 }
 
-void init(){
-
-    setSeed();
-
-}
-
+// Introduction and Instructions
 void introduction()
 {
-    cout<<"Welcome to Doodle Jump!\n";
+    cout<<"Welcome to Doodle Jump!"<<endl<<endl;
+    cout<<"This is an implementation of the popular Doodle Jump game in C++ using SFML."<<endl;
+
+    cout<<"\tInstructions\n";
+    cout<<"1. Press the left and right keys to move the Doodler left or right.\n";
+    cout<<"2. This games decides your score not based on the height you reach \n but based on the number of platforms you jump on.\n";
+    cout<<"3. Also, the left to right thing doesn\'t work. Sorry!\n";
+
+    cout<<"Press either the Left or Right Key to get started!";
+
 }
 
 Texture * imports(){
@@ -47,8 +51,19 @@ Texture * imports(){
 }
 
 
+// Initialisation
+void init(){
+
+    setSeed();
+
+    introduction();
+
+}
+
+
 int main()
 {
+    
     init();
 
     // Create app instance
