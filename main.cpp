@@ -11,9 +11,12 @@
 #include <SFML/Graphics.hpp> 
 #include <time.h>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 using namespace sf;
+using namespace std::this_thread;
 
 
 // Creating a point object to define location
@@ -36,7 +39,9 @@ void introduction()
     cout<<"2. This games decides your score not based on the height you reach \n but based on the number of platforms you jump on.\n";
     cout<<"3. Also, the left to right thing doesn\'t work. Sorry!\n";
 
-    cout<<"Press either the Left or Right Key to get started!";
+    cout<<"Wait for three seconds to get started.\n";
+
+    flush(cout);
 
 }
 
@@ -58,12 +63,17 @@ void init(){
 
     introduction();
 
+    sleep_until(std::chrono::system_clock::now() + chrono::seconds(3));
+
+    printf("\e[1;1H\e[2J");
+
+    flush(cout);
 }
 
 
 int main()
 {
-    
+
     init();
 
     // Create app instance
