@@ -205,7 +205,6 @@ int level() {
 
 void writeFile(char username[]) {
     f<<username<<":"<<score<<"-"<<levels[level() - 1]<<endl;
-    f.close();
 }
 
 void conclusion() {
@@ -219,6 +218,7 @@ void conclusion() {
         cin>>name;
     }
     writeFile(name);
+    f.close();
 }
 
 int main()
