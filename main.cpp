@@ -1,15 +1,27 @@
-#include <SFML/Graphics.hpp>
+/*
+ * 
+ * This is an implementation of the popular Doodle Jump game using SFML in C++.
+ * It was created by Viswesh Krishna and Nihal John George as a computer science
+ * project for class 12.
+ * 
+*/
+
+
+// Import SFML and time for game, iostream for interfacing with user
+#include <SFML/Graphics.hpp> 
 #include <time.h>
 #include <iostream>
 
 using namespace std;
 using namespace sf;
 
+
+// Creating a point object to define location
 struct point
 { int x,y;};
 
+//Using time value as seed
 void setSeed(){
-    //Using time value as seed
     srand(time(0));
 }
 
