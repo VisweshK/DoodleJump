@@ -36,7 +36,7 @@ int x=100,y=100,h=200; // Location of Doodler
 float dx=0,dy=0; // Velocity
 int score = 0;
 char levels[5][15] = {"Beginner", "Amateur", "Professional", "Expert", "Legend"};
-
+fstream f("Scores.txt", ios::app|ios::out);
 
 //Using time value as seed
 void setSeed() {
@@ -147,6 +147,7 @@ void checkHit() {
     }
 }
 
+// Reset locations of sprites
 void resetSprites() {
     app.draw(sBackground);
     app.draw(sPers);
@@ -158,6 +159,7 @@ void resetSprites() {
     }
 }
 
+// Run the app
 void run() {
 
     Event e;
@@ -201,13 +203,22 @@ int level() {
     else return 1;
 }
 
-void writeFile() {
-
+void writeFile(char username[]) {
+    f<<username<<":"<<score<<"-"<<levels[level() - 1]<<endl;
+    f.close();
 }
 
 void conclusion() {
+    char c, name[15];
     cout<<"Your Score is "<<score<<endl;
-    cout<<"You are a "<< levels[level() - 1]<<endl;
+    cout<<"You are a "<< levels[level() - 1]<<endl<<endl;
+    cout<<"Do you want to save your score? (y/n) : ";
+    cin>>c;
+    if (y == 'y') {
+        cout<<"\nUsername(no spaces):";
+        cin>>name;
+    }
+    writeFile(name);
 }
 
 int main()
