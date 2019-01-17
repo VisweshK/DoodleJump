@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
+#include <iostream>
 using namespace sf;
 
 struct point
@@ -41,10 +42,15 @@ int main()
 
     if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
     if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
+    // Testing
+    if (Keyboard::isKeyPressed(Keyboard::Down)) std::cout<<y<<std::endl;
 
     dy+=0.2;
     y+=dy;
-    if (y>500)  dy=-10;
+    if (y>500)  {
+        dy=-10;
+        std::cout<<"Game Over"<<std::endl;
+    }
 
 	if (y<h)
     for (int i=0;i<10;i++)
