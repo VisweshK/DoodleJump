@@ -21,10 +21,12 @@ using namespace std::this_thread;
 
 // Creating a point object to define location
 struct point
-{ int x,y;};
+{
+    int x,y;
+};
 
 //Using time value as seed
-void setSeed(){
+void setSeed() {
     srand(time(0));
 }
 
@@ -45,8 +47,9 @@ void introduction()
 
 }
 
-Texture * imports(){
-    
+// Import Images as textures
+Texture * imports() {
+
     Texture * t = new Texture[3];
     t[0].loadFromFile("images/background.png");
     t[1].loadFromFile("images/platform.png");
@@ -55,19 +58,23 @@ Texture * imports(){
     return t;
 }
 
+// Clear Screen
+void clearScreen() {
+    printf("\e[1;1H\e[2J");
+    flush(cout);
+}
 
 // Initialisation
-void init(){
+void init() {
 
     setSeed();
 
     introduction();
 
+    // Wait for three seconds
     sleep_until(std::chrono::system_clock::now() + chrono::seconds(3));
 
-    printf("\e[1;1H\e[2J");
-
-    flush(cout);
+    clearScreen();
 }
 
 
@@ -82,17 +89,18 @@ int main()
 
     Texture * t = imports();
 
+    // Create Sprites
     Sprite sBackground(*t), sPlat(*(t+1)), sPers(*(t+2));
 
     point plat[20];
 
-    for (int i=0;i<10;i++)
-      {
-       plat[i].x=rand()%400;
-       plat[i].y=rand()%533;
-      }
+    for (int i=0; i<10; i++)
+    {
+        plat[i].x=rand()%400;
+        plat[i].y=rand()%533;
+    }
 
-	int x=100,y=100,h=200;
+    int x=100,y=100,h=200;
     float dx=0,dy=0;
 
     while (app.isOpen())
@@ -104,42 +112,45 @@ int main()
                 app.close();
         }
 
-    if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
-    if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
-    // Testing
-    if (Keyboard::isKeyPressed(Keyboard::Down)) cout<<y<<endl;
+        if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
+        if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
+        // Testing
+        if (Keyboard::isKeyPressed(Keyboard::Down)) cout<<y<<endl;
 
-    dy+=0.2;
-    y+=dy;
-    if (y>500)  {
-        dy=-10;
-        cout<<"Game Over"<<endl;
+        dy+=0.2;
+        y+=dy;
+        if (y>500)  {
+            dy=-10;
+            cout<<"Game Over"<<endl;
+        }
+
+        if (y<h)
+            for (int i=0; i<10; i++)
+            {
+                y=h;
+                plat[i].y=plat[i].y-dy;
+                if (plat[i].y>533) {
+                    plat[i].y=0;
+                    plat[i].x=rand()%400;
+                }
+            }
+
+        for (int i=0; i<10; i++)
+            if ((x+50>plat[i].x) && (x+20<plat[i].x+68)
+                    && (y+70>plat[i].y) && (y+70<plat[i].y+14) && (dy>0))  dy=-10;
+
+        sPers.setPosition(x,y);
+
+        app.draw(sBackground);
+        app.draw(sPers);
+        for (int i=0; i<10; i++)
+        {
+            sPlat.setPosition(plat[i].x,plat[i].y);
+            app.draw(sPlat);
+        }
+
+        app.display();
     }
-
-	if (y<h)
-    for (int i=0;i<10;i++)
-    {
-      y=h;
-      plat[i].y=plat[i].y-dy;
-      if (plat[i].y>533) {plat[i].y=0; plat[i].x=rand()%400;}
-    }
-
-	for (int i=0;i<10;i++)
-    if ((x+50>plat[i].x) && (x+20<plat[i].x+68)
-    && (y+70>plat[i].y) && (y+70<plat[i].y+14) && (dy>0))  dy=-10;
-
-	sPers.setPosition(x,y);
-
-    app.draw(sBackground);
-    app.draw(sPers);
-    for (int i=0;i<10;i++)
-    {
-    sPlat.setPosition(plat[i].x,plat[i].y);
-    app.draw(sPlat);
-    }
-
-    app.display();
-}
 
     return 0;
 }
