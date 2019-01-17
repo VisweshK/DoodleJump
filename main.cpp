@@ -24,11 +24,14 @@ struct point
     int x,y;
 };
 
+
 // Global variables
 RenderWindow app(VideoMode(400, 533), "Doodle Jump!"); // Create App
 Texture * t = new Texture[3]; // Textures of sprites
 Sprite sBackground, sPlat, sPers;
 point plat[10]; // Create platforms
+int x=100,y=100,h=200; // Location of Doodler
+float dx=0,dy=0; // Velocity
 int score = 0;
 char levels[5][15] = {"Beginner", "Amateur", "Professional", "Expert", "Legend"};
 
@@ -107,36 +110,14 @@ void init() {
 
 }
 
-int level() {
-    if (score>1000) return 5;
-    else if (score>500) return 4;
-    else if (score>250) return 3;
-    else if (score>30) return 2;
-    else return 1;
-}
-
-void conclusion() {
-    cout<<"Your Score is "<<score<<endl;
-    cout<<"You are a "<< levels[level() - 1]<<endl;
-}
-
-int main()
-{
-
-    init();    
-
-    int x=100,y=100,h=200;
-    float dx=0,dy=0;
-
-    while (app.isOpen())
-    {
+void run() {
+    while (app.isOpen()) {
         Event e;
         while (app.pollEvent(e))
         {
             if (e.type == Event::Closed)
                 app.close();
         }
-
         if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
         if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
 
@@ -176,6 +157,29 @@ int main()
 
         app.display();
     }
+
+}
+
+int level() {
+    if (score>1000) return 5;
+    else if (score>500) return 4;
+    else if (score>250) return 3;
+    else if (score>30) return 2;
+    else return 1;
+}
+
+void conclusion() {
+
+    cout<<"Your Score is "<<score<<endl;
+    cout<<"You are a "<< levels[level() - 1]<<endl;
+}
+
+int main()
+{
+
+    init();    
+
+    run();
 
     conclusion();
 
