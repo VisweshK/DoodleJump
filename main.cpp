@@ -19,6 +19,10 @@ using namespace sf;
 using namespace std::this_thread;
 
 
+// Global variables
+int score = 0;
+char levels[5][15] = {"Beginner", "Amateur", "Professional", "Expert", "Legend"};
+
 // Creating a point object to define location
 struct point
 {
@@ -77,6 +81,18 @@ void init() {
     clearScreen();
 }
 
+int level() {
+    if (score>1000) return 5;
+    else if (score>500) return 4;
+    else if (score>250) return 3;
+    else if (score>50) return 2;
+    else return 1;
+}
+
+void ending() {
+    cout<<"Your Score is "<<score<<endl;
+    cout<<"You are a "<< levels[level() - 1]<<endl;
+}
 
 int main()
 {
@@ -92,7 +108,8 @@ int main()
     // Create Sprites
     Sprite sBackground(*t), sPlat(*(t+1)), sPers(*(t+2));
 
-    point plat[20];
+    // Create 10 platforms
+    point plat[10];
 
     for (int i=0; i<10; i++)
     {
@@ -114,14 +131,14 @@ int main()
 
         if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
         if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
-        // Testing
-        if (Keyboard::isKeyPressed(Keyboard::Down)) cout<<y<<endl;
 
         dy+=0.2;
         y+=dy;
+
         if (y>500)  {
             dy=-10;
-            cout<<"Game Over"<<endl;
+            cout<<"\nOh no! You hit the bottom!\n";
+            app.close();
         }
 
         if (y<h)
@@ -151,6 +168,8 @@ int main()
 
         app.display();
     }
+
+    ending();
 
     return 0;
 }
