@@ -13,14 +13,16 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <fstream>
 
 using namespace std;
 using namespace sf;
 using namespace std::this_thread;
 
 // Creating a point object to define location
-struct point
+class point
 {
+public:
     int x,y;
 };
 
@@ -110,61 +112,87 @@ void init() {
 
 }
 
+// Move the Doodler horizontally
 void move() {
     if (Keyboard::isKeyPressed(Keyboard::Right)) x+=3;
     if (Keyboard::isKeyPressed(Keyboard::Left)) x-=3;
 }
 
-void run() {
-    while (app.isOpen()) {
-        Event e;
-        while (app.pollEvent(e))
-        {
-            if (e.type == Event::Closed)
-                app.close();
+// Reset location of platforms when Doodler rises
+void resetPlatforms() {
+    for (int i=0; i<10; i++)
+    {
+        y=h;
+        plat[i].y=plat[i].y-dy;
+        if (plat[i].y>533) {
+            plat[i].y=0;
+            plat[i].x=rand()%400;
         }
-        
-        move();
-
-        dy+=0.2;
-        y+=dy;
-
-        if (y>500)  {
-            dy=-10;
-            cout<<"\nOh no! You hit the bottom!\n";
-            app.close();
-        }
-
-        if (y<h)
-            for (int i=0; i<10; i++)
-            {
-                y=h;
-                plat[i].y=plat[i].y-dy;
-                if (plat[i].y>533) {
-                    plat[i].y=0;
-                    plat[i].x=rand()%400;
-                }
-            }
-
-        for (int i=0; i<10; i++)
-            if ((x+50>plat[i].x) && (x+20<plat[i].x+68)
-                    && (y+70>plat[i].y) && (y+70<plat[i].y+14) && (dy>0))  dy=-10;
-
-        sPers.setPosition(x,y);
-
-        app.draw(sBackground);
-        app.draw(sPers);
-        for (int i=0; i<10; i++)
-        {
-            sPlat.setPosition(plat[i].x,plat[i].y);
-            app.draw(sPlat);
-        }
-
-        app.display();
     }
-
 }
 
+void whenDeath() {
+    dy=-10;
+    cout<<"\nOh no! You missed all the platforms!\n\n";
+    app.close();
+}
+
+void checkHit() {
+    for (int i=0; i<10; i++) {
+        if ((x+50>plat[i].x) && (x+20<plat[i].x+68)
+                && (y+70>plat[i].y) && (y+70<plat[i].y+14) && (dy>0)) {
+            dy=-10;
+            score++;
+        }
+    }
+}
+
+void resetSprites() {
+    app.draw(sBackground);
+    app.draw(sPers);
+
+    for (int i=0; i<10; i++)
+    {
+        sPlat.setPosition(plat[i].x,plat[i].y);
+        app.draw(sPlat);
+    }
+}
+
+void run() {
+
+    Event e;
+    while (app.pollEvent(e)) {
+        if (e.type == Event::Closed)
+            app.close();
+    }
+    
+    move();
+
+    // Moving the Doodler up and down
+    dy+=0.2;
+    y+=dy;
+
+    // Doodler has died
+    if (y>500) 
+        whenDeath();
+
+    // Doodler has moved up
+    if (y<h)
+        resetPlatforms();
+
+    // If Doodler hits platform
+    checkHit();
+
+    // Reset Position of Doodler
+    sPers.setPosition(x,y);
+
+    // Redraw sprites
+    resetSprites();
+
+    app.display();   
+}
+
+// Find Level of score
 int level() {
     if (score>1000) return 5;
     else if (score>500) return 4;
@@ -173,8 +201,11 @@ int level() {
     else return 1;
 }
 
-void conclusion() {
+void writeFile() {
 
+}
+
+void conclusion() {
     cout<<"Your Score is "<<score<<endl;
     cout<<"You are a "<< levels[level() - 1]<<endl;
 }
@@ -184,7 +215,8 @@ int main()
 
     init();    
 
-    run();
+    while (app.isOpen())
+        run();
 
     conclusion();
 
