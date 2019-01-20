@@ -208,16 +208,16 @@ void writeFile(char username[]) {
 }
 
 void conclusion() {
-    char c, name[15];
+    char c[2], name[15];
     cout<<"Your Score is "<<score<<endl;
     cout<<"You are a "<< levels[level() - 1]<<endl<<endl;
     cout<<"Do you want to save your score? (y/n) : ";
     cin>>c;
-    if (y == 'y') {
+    if (c[0] == 'y') {
         cout<<"\nUsername(no spaces):";
         cin>>name;
+        writeFile(name);
     }
-    writeFile(name);
     f.close();
 }
 
